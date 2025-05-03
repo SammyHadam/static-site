@@ -33,5 +33,9 @@ def extract_markdown_links(text):
     return matches
 
 def split_nodes_image(old_nodes):
+    for node in old_nodes:
+        finding_markdown_image = extract_markdown_images(node)
+        new_nodes = old_nodes.split(f"![{finding_markdown_image[0]}]({finding_markdown_image[1]})", 1)
     
-def split_nodes_links(old_nodes):
+def split_nodes_link(old_nodes):
+    finding_markdown_link = extract_markdown_links(old_nodes)
