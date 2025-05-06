@@ -33,9 +33,69 @@ def extract_markdown_links(text):
     return matches
 
 def split_nodes_image(old_nodes):
+    result = []
     for node in old_nodes:
-        finding_markdown_image = extract_markdown_images(node)
-        new_nodes = old_nodes.split(f"![{finding_markdown_image[0]}]({finding_markdown_image[1]})", 1)
+        if node.text_type != TextType.TEXT:
+            # Only process TEXT nodes for images
+            result.append(node)
+            continue
+            
+        # Process this node
+        images = extract_markdown_images(node.text)
+        if not images:
+            # No images to process
+            result.append(node)
+        else:
+            # Process the first image
+            alt_text, url = images[0]
+            image_markdown = f"![{alt_text}]({url})"
+            parts = node.text.split(image_markdown, 1)
+            
+            # Add text before image if not empty
+            if parts[0]:
+                result.append(TextNode(parts[0], TextType.TEXT))
+                
+            # Add the image node
+            result.append(TextNode(alt_text, TextType.IMAGE, url))
+            
+            # Process text after image recursively if not empty
+            if parts[1]:
+                # Recursively process any remaining images in parts[1]
+                remaining_nodes = split_nodes_image([TextNode(parts[1], TextType.TEXT)])
+                result.extend(remaining_nodes)
     
+    return result
+
 def split_nodes_link(old_nodes):
-    finding_markdown_link = extract_markdown_links(old_nodes)
+    result = []
+    for node in old_nodes:
+        if node.text_type != TextType.TEXT:
+            # Only process TEXT nodes for links
+            result.append(node)
+            continue
+            
+        # Process this node
+        links = extract_markdown_links(node.text)
+        if not links:
+            # No links to process
+            result.append(node)
+        else:
+            # Process the first link
+            text, url = links[0]
+            link_markdown = f"[{text}]({url})"  # Removed the exclamation mark
+            parts = node.text.split(link_markdown, 1)
+            
+            # Add text before link if not empty
+            if parts[0]:
+                result.append(TextNode(parts[0], TextType.TEXT))
+                
+            # Add the link node
+            result.append(TextNode(text, TextType.LINK, url))
+            
+            # Process text after link recursively if not empty
+            if parts[1]:
+                # Recursively process any remaining links in parts[1]
+                remaining_nodes = split_nodes_link([TextNode(parts[1], TextType.TEXT)])
+                result.extend(remaining_nodes)
+    
+    return result
