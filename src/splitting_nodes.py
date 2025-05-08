@@ -103,6 +103,12 @@ def text_to_textnodes(text):
     code_extracted = split_nodes_delimiter(italic_extracted, "`", TextType.CODE)
     return code_extracted
 
+def markdown_to_blocks(markdown):
+    blocks = []
+    text_in_list_form = markdown.strip().split("\n\n")
+    for text in text_in_list_form:
+        blocks.append(text)
+    return blocks
 
 def extract_markdown_images(text):
     matches = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)

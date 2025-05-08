@@ -5,7 +5,7 @@ from splitting_nodes import (
     extract_markdown_links,
     split_nodes_image, 
     split_nodes_link, 
-    text_to_textnodes
+    text_to_textnodes,
 )
 
 from textnode import TextNode, TextType
@@ -158,5 +158,6 @@ class TextToNode(unittest.TestCase):
             ],
             nodes,
         )
+
 if __name__ == "__main__":
     unittest.main()
