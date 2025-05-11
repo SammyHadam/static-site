@@ -74,12 +74,17 @@ class BlockToBlockType(unittest.TestCase):
         block = "# This is a heading"
         result = block_to_block_type(block)
         self.assertEqual(result, BlockType.HEADING)
+
     def test_unordered_list(self):
         block = "- Item 1\n- Item 2"
         result = block_to_block_type(block)
         self.assertEqual(result, BlockType.UNORDERED_LIST)
+
     def test_ordered_list(self):
         block = "1. Chicken\n2. Jockey"
+        self.assertEqual(block_to_block_type(block), BlockType.ORDERED_LIST)
+
+
     def test_block_to_block_types(self):
         block = "# heading"
         self.assertEqual(block_to_block_type(block), BlockType.HEADING)

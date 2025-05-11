@@ -18,8 +18,9 @@ def markdown_to_blocks(markdown):
         filtered_blocks.append(block)
     return filtered_blocks
 
-headings = ["# ", "## ", "### ", "#### ", "##### ", "###### "]
+
 def block_to_block_type(block):
+    headings = ["# ", "## ", "### ", "#### ", "##### ", "###### "]
     for heading in headings:
         if block.startswith(heading):
             return BlockType.HEADING
